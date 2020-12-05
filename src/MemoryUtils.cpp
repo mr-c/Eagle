@@ -25,8 +25,11 @@
 void *ALIGNED_MALLOC(uint64 size) {
 #ifdef USE_MKL_MALLOC
   void *p = mkl_malloc(size, MEM_ALIGNMENT);
-#else
+#elif defined(__SSE__)
   void *p = _mm_malloc(size, MEM_ALIGNMENT);
+#else
+#include <stdlib.h>
+  void *p = aligned_alloc(MEM_ALIGNMENT, size);
 #endif
   // TODO: change to assert() or dispense with altogether and change ALIGNED_MALLOC to macro?
   if (p == NULL) {

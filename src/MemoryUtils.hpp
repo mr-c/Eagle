@@ -30,9 +30,11 @@ void *ALIGNED_MALLOC(uint64 size);
 #ifdef USE_MKL_MALLOC
 #include <mkl.h>
 #define ALIGNED_FREE mkl_free
-#else
+#elif defined(__SSE__)
 #include <xmmintrin.h>
 #define ALIGNED_FREE _mm_free
+#else
+#define ALIGNED_FREE free
 #endif
 
 #define ALIGNED_MALLOC_DOUBLES(numDoubles) (double *) ALIGNED_MALLOC((numDoubles)*sizeof(double))
